@@ -1,0 +1,5 @@
+streamlit~=1.10.0
+fastf1~=2.2.8
+pandas~=1.4.3
+plotly~=5.9.0
+matplotlib~=3.5.2
