@@ -6,9 +6,16 @@ import datetime
 import plotly.express as px
 import matplotlib.pyplot as plt
 
+@st.cache
+def getSession(track, year, event):
+    f1.Cache.set_disabled()
+    s = f1.get_session(year, track, event)
+    s.load()
+    return s
+
 print("Star")
 # Setup
-f1.Cache.enable_cache('cache/')
+#f1.Cache.enable_cache('cache/')
 st.set_page_config(layout='wide')
 
 
@@ -22,8 +29,7 @@ selected_year = st.selectbox(label="Year", options=list(range(2000, 2023, 1)))
 selected_session = st.selectbox(label="Session", options=['FP1', 'FP2', 'FP3', 'Qualifying', 'Race'])
 
 # Load Session
-session = f1.get_session(selected_year, selected_track, selected_session)
-session.load()
+session = getSession(selected_track, selected_year, selected_session)
 data = session.laps.sort_values('Driver')
 drivers = pd.unique(session.laps['Driver'])
 
