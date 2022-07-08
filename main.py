@@ -6,6 +6,7 @@ import datetime
 import plotly.express as px
 import matplotlib.pyplot as plt
 from helper import *
+import numpy as np
 
 
 print("Start")
@@ -69,7 +70,8 @@ if loadedDataSuccessfully:
 
         print(type(x))
         ax.plot(x, y, linewidth=0.5)
-
+    ax.set_facecolor('#0E1117')
+    fig.patch.set_facecolor('#0E1117')
     plt.xticks(rotation=45)
     if plot_type == "Matplotlib":
         st.pyplot(fig)
@@ -80,6 +82,36 @@ if loadedDataSuccessfully:
             st.line_chart(df, height= 400)
         except:
             st.text("Plotting Error")
+
+        print(session.laps.pick_drivers(selected_drivers).pick_fastest().
+                      get_pos_data().sort_values('Date').drop(columns=['SessionTime', 'Time', 'Date','Status', 'Source']).
+                      set_index('X'))
+    st.subheader('Map View')
+    fig, ax = plt.subplots(figsize=(16, 8))
+    try:
+        for driver in selected_drivers:
+            if area == 'Fastest':
+                x = session.laps.pick_driver(driver).pick_fastest().telemetry['X']
+                y = session.laps.pick_driver(driver).pick_fastest().telemetry['Y']
+            else:
+                x = session.laps.pick_driver(driver).telemetry['X']
+                y = session.laps.pick_driver(driver).telemetry['Y']
+
+
+            points = np.array([x, y]).T.reshape(-1, 1, 2)
+            segments = np.concatenate([points[:-1], points[1:]], axis=1)
+            ax.plot(x, y, linewidth=2)
+
+        ax.set_facecolor('#0E1117')
+        fig.patch.set_facecolor('#0E1117')
+        ax.axis('off')
+        ax.legend(selected_drivers)
+        print(selected_drivers)
+
+        st.pyplot(fig)
+    except:
+        st.text("Error Positon Data not found!")
+
 
 print('Done')
 
