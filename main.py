@@ -11,7 +11,7 @@ import numpy as np
 
 print("Start")
 # Setup
-st.set_page_config(layout='wide')
+st.set_page_config(page_title='F1 Timing', layout='wide', )
 
 grandPrix = ['Melbourne', 'Singapore', 'Spielberg', 'Spa', 'Barcelona', 'Silverstone']
 
