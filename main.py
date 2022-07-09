@@ -54,8 +54,6 @@ if loadedDataSuccessfully:
 
     fig, ax = plt.subplots(figsize=(16, 8))
 
-
-
     for driver in selected_drivers:
         if area == 'Fastest':
             x = session.laps.pick_driver(driver).pick_fastest().get_car_data().add_distance()['Distance']
@@ -70,6 +68,7 @@ if loadedDataSuccessfully:
 
         print(type(x))
         ax.plot(x, y, linewidth=0.5)
+    ax.legend(selected_drivers)
     ax.set_facecolor('#0E1117')
     fig.patch.set_facecolor('#0E1117')
     plt.xticks(rotation=45)
