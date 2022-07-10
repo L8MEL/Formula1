@@ -14,6 +14,6 @@ if data_loaded:
     session = st.session_state['session']
     df = getResults(session)
     st.title("Results")
-    print(df.columns)
     columns: list[str] = st.multiselect(label='Select Information', options=df.columns, default=df.columns[0])
+
     st.table(df[columns])

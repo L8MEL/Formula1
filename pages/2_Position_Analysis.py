@@ -12,13 +12,15 @@ def loadDataFrame() -> pd.DataFrame:
     session = st.session_state['session']
     df = pd.DataFrame()
     drivers = pd.unique(session.laps['Driver'])
+    speeds = dict()
     for driver in drivers:
         df[driver] = session.laps.pick_driver(driver).get_car_data().add_distance()['Distance']
+        speeds[driver] = session.laps.pick_driver(driver).get_car_data().Speed.mean()
 
 
     df = df.subtract(df.max(axis=1), axis=0)
     df = df.iloc[lambda x: x.index % 10 == 0]
-    return df
+    return df, speeds
 
 
 try:
@@ -30,8 +32,14 @@ except:
 
 if data_loaded:
     st.title('Position')
-    st.text('the following diagram shows the Distance to the leader of the race.')
+    st.text('The following diagram shows the Distance to the leader of the race.')
     st.subheader('Diagram')
-    data = loadDataFrame()
+    data, speeds = loadDataFrame()
     selected_drivers = st.multiselect(label='Driver selector', options=data.columns, default=data.columns[0])
+    columns = st.columns(len(selected_drivers))
+    print(type(columns))
+    counter = 0
+    for column in columns:
+        column.metric(label=selected_drivers[counter], value=str(round(speeds[selected_drivers[counter]], 2)) + ' km/h')
+        counter += 1
     st.line_chart(data[selected_drivers])

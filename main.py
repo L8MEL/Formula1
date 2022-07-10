@@ -27,6 +27,9 @@ except:
 
 if data_loaded:
     st.subheader('Data is loaded succesfully')
+    st.text('Track: ' + st.session_state['track'])
+    st.text('Year: ' + str(st.session_state['year']))
+    st.text('Session: ' + st.session_state['event_type'])
 
 
 
