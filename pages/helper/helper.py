@@ -2,9 +2,9 @@ import fastf1.core
 import pandas as pd
 import streamlit as st
 import fastf1 as f1
-import fastf1.core
 from copy import deepcopy
 import numpy as np
+
 
 
 def getSession(track: str, year: int, event: str) -> None:

@@ -1,8 +1,8 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-
 from pages.helper.helper import calcBoxStop
+
 data_loaded = False
 try:
     session = st.session_state['session']
