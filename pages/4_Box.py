@@ -16,8 +16,7 @@ if data_loaded:
     st.title('Boxenstopps')
     st.subheader('Driver Selection')
 
-    selected_drivers = st.multiselect(label="Drivers", options=pd.unique(session.laps['Driver']),
-                                      default=pd.unique(session.laps['Driver'])[0])
+    selected_drivers = st.selectbox(label="Drivers", options=pd.unique(session.laps['Driver']))
 
     df = pd.DataFrame(calcBoxStop(session=session))
     df['Size'] = 20
@@ -32,7 +31,7 @@ if data_loaded:
     for column in df.columns:
         df[column] = df[column].apply(lambda x: setNone(x))
 
-    fig = px.scatter(df, x='Counter', y=selected_drivers, size = 'Size', height=800, width=1600)
+    fig = px.bar(df, x='Counter', y=selected_drivers, size = 'Size', height=800, width=1600)
 
     st.plotly_chart(fig)
 else:
