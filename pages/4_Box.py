@@ -3,27 +3,38 @@ import plotly.express as px
 import pandas as pd
 
 from pages.helper.helper import calcBoxStop
-session = st.session_state['session']
-st.title('Boxenstopps')
-st.subheader('Driver Selection')
+data_loaded = False
+try:
+    session = st.session_state['session']
+    data_loaded = True
 
-selected_drivers = st.multiselect(label="Drivers", options=pd.unique(session.laps['Driver']),
-                                  default=pd.unique(session.laps['Driver'])[0])
+except Exception as e:
+    print(e)
+    data_loaded = False
 
-df = pd.DataFrame(calcBoxStop(session=session))
-df['Size'] = 20
-#df.replace(to_replace=0, value=None, inplace=True)
+if data_loaded:
+    st.title('Boxenstopps')
+    st.subheader('Driver Selection')
 
-def setNone(x):
-    if x < 0.1:
-        return None
-    else:
-        return x
+    selected_drivers = st.multiselect(label="Drivers", options=pd.unique(session.laps['Driver']),
+                                      default=pd.unique(session.laps['Driver'])[0])
 
-for column in df.columns:
-    df[column] = df[column].apply(lambda x: setNone(x))
+    df = pd.DataFrame(calcBoxStop(session=session))
+    df['Size'] = 20
+    #df.replace(to_replace=0, value=None, inplace=True)
 
-fig = px.scatter(df, x='Counter', y=selected_drivers, size = 'Size', height=800, width=1600)
+    def setNone(x):
+        if x < 0.1:
+            return None
+        else:
+            return x
 
-st.plotly_chart(fig)
+    for column in df.columns:
+        df[column] = df[column].apply(lambda x: setNone(x))
+
+    fig = px.scatter(df, x='Counter', y=selected_drivers, size = 'Size', height=800, width=1600)
+
+    st.plotly_chart(fig)
+else:
+    st.subheader('Data not loaded')
 #st.dataframe(df)
