@@ -31,7 +31,7 @@ if data_loaded:
     for column in df.columns:
         df[column] = df[column].apply(lambda x: setNone(x))
 
-    fig = px.bar(df, x='Counter', y=selected_drivers, size = 'Size', height=800, width=1600)
+    fig = px.bar(df, x='Counter', y=selected_drivers)
 
     st.plotly_chart(fig)
 else:
