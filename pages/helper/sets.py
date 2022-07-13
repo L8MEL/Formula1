@@ -1,5 +1,5 @@
-import streamlit as st
 from pages.helper.helper import *
+import streamlit as st
 
 
 def session_selection():
@@ -19,7 +19,6 @@ def session_selection():
     return selected_track, selected_year, selected_session
 
 def sideBarLayout():
-
     with st.sidebar:
         if st.session_state['data_loaded']:
             st.text('Track: ' + st.session_state['track'])
