@@ -2,6 +2,7 @@ from typing import List, Any
 
 import streamlit as st
 from pages.helper.helper import getResults
+from pages.helper.sets import session_selection, sideBarLayout
 
 try:
     session = st.session_state['session']
@@ -17,3 +18,5 @@ if data_loaded:
     columns: list[str] = st.multiselect(label='Select Information', options=df.columns, default=df.columns[0])
 
     st.table(df[columns])
+
+    sideBarLayout()

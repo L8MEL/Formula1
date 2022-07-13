@@ -36,7 +36,5 @@ f1.Cache.enable_cache('f1_cache')
 s = f1.get_session(year, track, event)
 s.load()
 
-calcBoxStop(s)
-
-
-print("End")
+weather = getWeather(s)
+print(123)

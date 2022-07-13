@@ -9,6 +9,7 @@ import streamlit as st
 import fastf1.core
 import fastf1 as f1
 import copy
+from pages.helper.sets import session_selection, sideBarLayout
 
 
 def loadDataFrame() -> tuple[pd.DataFrame, dict[str, float]]:
@@ -46,6 +47,7 @@ except:
     st.subheader("No data loaded. \n Please got to main")
 
 if data_loaded:
+    sideBarLayout()
     st.title('Position')
     st.text('The following diagram shows the Distance to the leader of the race.')
     st.subheader('Diagram')

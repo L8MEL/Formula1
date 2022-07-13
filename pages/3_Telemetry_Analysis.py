@@ -8,6 +8,7 @@ from pages.helper.helper import *
 import matplotlib.pyplot as plt
 
 from pages.helper.sets import *
+from pages.helper.sets import session_selection, sideBarLayout
 
 try:
     session = st.session_state['session']
@@ -17,6 +18,7 @@ except:
     st.subheader("No data laoded. \n Please got to main")
 
 if data_loaded:
+    sideBarLayout()
     session: fastf1.core.Session = st.session_state['session']
     st.subheader("Results")
 

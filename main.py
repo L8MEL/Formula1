@@ -1,11 +1,12 @@
 import streamlit as st
 
-from pages.helper.sets import session_selection
+from pages.helper.sets import session_selection, sideBarLayout
 from pages.helper.helper import getSession
 
 st.set_page_config(page_title='F1 Timing', layout='wide')
 
-if ['track', 'year', 'event_type'] not in st.session_state:
+if not 'track' in st.session_state:
+    print('Setting defaul values')
     st.session_state['track'] = 'Melbourne'
     st.session_state['year'] = 2022
     st.session_state['event_type'] = 'Race'
@@ -14,22 +15,18 @@ if ['track', 'year', 'event_type'] not in st.session_state:
 
 st.title('Welcome to the F1 Data Analysis Page')
 
-session_selection()
-st.button(label='Load Session', on_click=getSession, args=(st.session_state['track'], st.session_state['year'],
-                                                           st.session_state['event_type']))
+args = session_selection()
+st.button(label='Load Session', on_click=getSession, args=args)
 
 try:
     session = st.session_state['session']
-    data_loaded = True
+    st.session_state['data_loaded'] = True
+    st.success('Data successfully loaded')
 except:
-    data_loaded = False
-    st.subheader("No data loaded. \n Please load a session")
+    st.session_state['data_loaded'] = False
+    st.error("No data loaded")
 
-if data_loaded:
-    st.subheader('Data is loaded succesfully')
-    st.text('Track: ' + st.session_state['track'])
-    st.text('Year: ' + str(st.session_state['year']))
-    st.text('Session: ' + st.session_state['event_type'])
+sideBarLayout()
 
 
 
