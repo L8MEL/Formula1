@@ -60,6 +60,5 @@ if data_loaded:
     for column in columns:
         column.metric(label=selected_drivers[counter], value=str(round(speeds[selected_drivers[counter]], 2)) + ' km/h')
         counter += 1
-    st.subheader()
     st.line_chart([selected_drivers])
 
