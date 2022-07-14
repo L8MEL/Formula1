@@ -38,28 +38,26 @@ def calculatePositions(df) -> pd.DataFrame:
 
     return positions
 
-try:
-    session = st.session_state['session']
-    data_loaded = True
 
-except:
-    data_loaded = False
-    st.subheader("No data loaded. \n Please got to main")
+if "data_manager" in st.session_state:
+    manager: DataManager = st.session_state['data_manager']
+    if manager.loaded_data:
+        sideBarLayout()
+        st.title('Position')
+        st.text('The following diagram shows the Distance to the leader of the race.')
 
-if data_loaded:
-    sideBarLayout()
-    st.title('Position')
-    st.text('The following diagram shows the Distance to the leader of the race.')
-    st.subheader('Diagram')
-    data, speeds = loadDataFrame()
-    selected_drivers = st.multiselect(label='Driver selector', options=data.columns, default=data.columns[0])
-    columns = st.columns(len(selected_drivers))
+        selected_drivers = st.multiselect(label='Driver selector', options=manager.drivers,
+                                          default=manager.drivers[0])
 
-    counter = 0
-    st.subheader("Mean Speed")
-    for column in columns:
-        column.metric(label=selected_drivers[counter], value=str(round(speeds[selected_drivers[counter]], 2)) + ' km/h')
-        counter += 1
+        counter = 0
+        st.subheader("Mean Speed")
+        columns = st.columns(len(selected_drivers))
+        for column in columns:
+            column.metric(label=selected_drivers[counter],
+                          value=str(round(manager.telemetry[selected_drivers[counter]]['Speed'].mean(), 2)) + ' km/h')
+            counter += 1
 
-    st.line_chart(data[selected_drivers])
+        st.subheader('Diagram')
+        st.line_chart(manager.getDistanceToLeaderDF()[selected_drivers])
+
 

@@ -31,7 +31,6 @@ def getResults(session: fastf1.core.Session) -> pd.DataFrame:
 
     session.load()
     df = deepcopy(session.results)
-    df.to_numpy()
     df.drop(labels=['TeamColor', 'Time'], axis=1,
             inplace=True)
     return df
