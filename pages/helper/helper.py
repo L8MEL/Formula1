@@ -7,6 +7,7 @@ import numpy as np
 
 
 
+
 def getSession(track: str, year: int, event: str) -> None:
     # f1.Cache.set_disabled()
     with st.spinner('Data is loading...'):
@@ -23,21 +24,7 @@ def getSession(track: str, year: int, event: str) -> None:
                 st.session_state['session'] = s
         except:
             st.error('Data not available')
-
         return
-
-@st.cache
-def getResults(session: fastf1.core.Session) -> pd.DataFrame:
-
-    session.load()
-    df = deepcopy(session.results)
-    df.to_numpy()
-    df.drop(labels=['TeamColor', 'Time'], axis=1,
-            inplace=True)
-    return df
-
-def getDrivers(session: fastf1.core):
-    return pd.unique(session.laps['Driver'])
 
 def calcBoxStop(session: f1.core.Session) -> dict[str: list]:
     all_stops = dict()
@@ -73,3 +60,6 @@ def getWinner(session: f1.core.Session):
     df = session.results
     df.sort_values('GridPosition', inplace=True)
     return df.iloc[0].Abbreviation
+
+def getDrivers(session: fastf1.core):
+    return pd.unique(session.laps['Driver'])

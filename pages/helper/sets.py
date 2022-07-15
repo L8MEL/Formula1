@@ -27,6 +27,6 @@ def sideBarLayout():
 
             df = getWeather(st.session_state['session'])
             st.metric(label='Air Temp.', value=str(round(df.AirTemp.mean(), 1)) + ' °C')
-            st.metric(label='Humidity', value=str(int(round(df.Humidity.mean(),0))) + ' %')
-            st.metric(label='Track Temp.', value=str(round(df.TrackTemp.mean(),1)) + ' °C')
-            st.metric(label='Max Windsp.', value=str(round(df.WindSpeed.max(),1)) + ' km/h')
+            st.metric(label='Humidity', value=str(int(round(df.Humidity.mean(), 0))) + ' %')
+            st.metric(label='Track Temp.', value=str(round(df.TrackTemp.mean(), 1)) + ' °C')
+            st.metric(label='Max Windsp.', value=str(round(df.WindSpeed.max(), 1)) + ' km/h')

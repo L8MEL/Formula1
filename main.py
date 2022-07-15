@@ -11,8 +11,6 @@ if not 'track' in st.session_state:
     st.session_state['year'] = 2022
     st.session_state['event_type'] = 'Race'
 
-#st.session_state['data_loaded_successful'] = False
-
 st.title('Welcome to the F1 Data Analysis Page')
 
 args = session_selection()

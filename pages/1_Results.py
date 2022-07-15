@@ -1,21 +1,10 @@
 from typing import List, Any
 
 import streamlit as st
-from pages.helper.helper import getResults
+
 from pages.helper.sets import sideBarLayout
+sideBarLayout()
 
-try:
-    session = st.session_state['session']
-    data_loaded = True
-except:
-    data_loaded = False
-    st.subheader("No data laoded. \n Please got to main")
+st.title('Results')
 
-if data_loaded:
-    session = st.session_state['session']
-    df = getResults(session)
-    st.title("Results")
-    columns: list[str] = st.multiselect(label='Select Information', options=df.columns, default=df.columns[0])
-
-    st.table(df[columns])
-    sideBarLayout()
+st.table(st.session_state['session'].results.drop(columns=['Time', 'Q1', 'Q2', 'Q3']))
