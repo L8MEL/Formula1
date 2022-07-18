@@ -1,48 +1,115 @@
+import numpy as np
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 import datetime
-
-
 import fastf1 as f1
 import fastf1.core
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+from pages.helper.sets import *
+
+index_dict= dict(Time=0, DriverNumber=1, LapTime=2, LapNumber=3, Stint=4, PitOutTime=5, PitInTime=6, Sector1Time=7,
+                 Sector2Time=8, Sector3Time=9, Sector1SessionTime=10, Sector2SessionTime=11, Sector3SessionTime=12,
+                 SpeedI1=13, SpeedI2=14, SpeedFL=15, SpeedST=15, IsPersonalBest=16, Compound=17, TyreLife=18,
+                 FreshTyre=19, LapStartTime=20, Team=21, Driver=22, TrackStatus=23, IsAccurate=24, LapStartDate=25)
+
 
 def getSpeedTrapDf(session: f1.core.Session, selected_drivers: list, speedTrap: str) -> pd.DataFrame:
-    index_translate = {'Sector1Time': 9, 'SpeedI1': 13, 'SpeedI2': 14, 'SpeedFL': 15, 'SpeedST': 16}
+    global index_dict
     df = pd.DataFrame()
-    max_laps = 0
     for driver in selected_drivers:
-        driver_speeds = list()
         lap_counter = 0
         for lap in session.laps.pick_driver(driver).iterlaps():
+            lap = lap[1]
+            lap_data = dict()
             lap_counter += 1
-            #print(lap[1][13])
+            lap_data['Driver'] = [driver]
+            lap_data['Lap'] = [lap[index_dict['LapNumber']]]
             if 'Time' in speedTrap:
-                driver_speeds.append(lap[1][index_translate[speedTrap]] + session.date.normalize())
+                lap_data['Value'] = [lap[index_dict[speedTrap]] + session.date.normalize()]
             else:
-                driver_speeds.append(lap[1][index_translate[speedTrap]])
-        max_laps = max(lap_counter, max_laps)
+                lap_data['Value'] = [lap[1][index_dict[speedTrap]]]
 
-        df[driver] = driver_speeds
-    df['Laps'] = list(range(1, max_laps+1))
+            df = pd.concat((df, pd.DataFrame.from_dict(lap_data)), axis=0)
+
     return df
 
-def plotDf(df: pd.DataFrame, selected_drivers: list, speedTrap: str) -> None:
-    col1, col2, col3 = st.columns(3)
-    width = col1.number_input(label='Width', min_value=100, max_value=2000, value=1200)
-    height = col2.number_input(label='Height', min_value=100, max_value=2000, value=800)
-    marker_size = col3.number_input(label='Marker Size', min_value=1, max_value=30, value=5)
-    type = st.radio(label='Type', options=['Scatter', 'Line'])
-    if type =='Scatter':
-        fig = px.scatter(df, x='Laps', y=selected_drivers, width=width, height=height)
-        fig.update_traces(marker_size=marker_size, marker_symbol="circle-dot", marker_line_width=0.1*marker_size)
-        fig.update_layout(legend_title="Driver")
-    elif type == 'Line':
-        fig = px.line(df, x='Laps', y=selected_drivers, width=width, height=height)
 
-    # if 'Time' in speedTrap:
-    #     print('Contains Time')
-    #     fig.update_layout(xaxis_tickformat='%H-%M-%S')
+
+def getStints(session: f1.core.Session, selected_drivers: list):
+    # df = pd.DataFrame({'index': 0, 'Driver': 'XXX', 'Counter': 0, 'Lap': 0, 'Tire': 'XXX', 'Stint_Distance': 0})
+    df = pd.DataFrame()
+
+    index = 1
+    for driver in selected_drivers:
+        current_stint = 0
+        last_tire = ""
+        stint_distance = 0
+        last_lap = 0
+
+
+        for lap in session.laps.pick_driver(driver).iterlaps():
+            pit_Stop = dict()
+            lap = lap[1]
+            #print(lap)
+
+            pit_Stop['index'] = [index]
+            pit_Stop['Driver'] = [driver]
+            pit_Stop['Counter'] = [current_stint]
+            pit_Stop['Lap'] = [last_lap]
+            pit_Stop['Tire'] = [last_tire]
+            pit_Stop['Stint_Distance'] = [stint_distance]
+
+            if not lap[18] == 'UNKNOWN':
+                last_tire = lap[18]
+            stint_distance = lap[19]
+            last_lap = lap[4]
+            current_stint += 1
+            index += 1
+
+            tmp_df = pd.DataFrame.from_dict(pit_Stop)
+
+            df = pd.concat((df, tmp_df), axis=0)
+
+    return df
+
+
+# Plots
+def plotDf(df: pd.DataFrame, width: int, height: int, marker_size: int, type: str) -> None:
+    if type == 'Scatter':
+        fig = px.scatter(df, x='Lap', y='Value', color='Driver', width=width, height=height)
+        fig.update_traces(marker_size=marker_size, marker_symbol="circle-dot", marker_line_width=0.1 * marker_size)
+        fig.update_layout(legend_title="Driver")
+        fig.update_xaxes(range=[0, df.Lap.max()])
+    elif type == 'Line':
+        fig = px.line(df, x='Lap', y='Value', color='Driver', width=width, height=height)
+        fig.update_layout(legend_title="Driver")
+        fig.update_traces(line_width=marker_size)
+        fig.update_xaxes(range=[0, df.Lap.max()])
+
     st.plotly_chart(fig)
+
+def plotStints(df: pd.DataFrame, width: int, height: int, marker_size: int, type: str, max_laps: int) -> None:
+    fig = px.scatter(df, x='Counter', y='Driver', color='Tire', width=width, height=height*0.3,
+                     color_discrete_map={
+                         "SOFT": "red",
+                         "MEDIUM": "yellow",
+                         "HARD": "White"})
+    fig.update_xaxes(range=[0, max_laps])
+    fig.update_traces(marker_size=marker_size)
+    st.plotly_chart(fig)
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -26,7 +26,7 @@ def getSession(track: str, year: int, event: str) -> None:
             st.error('Data not available')
         return
 
-def calcBoxStop(session: f1.core.Session) -> dict[str: list]:
+def calcBoxStop(session: f1.core.Session):
     all_stops = dict()
     all_stops['Counter'] = list( ['Start', *list(range(1, 10))])
 
@@ -63,3 +63,14 @@ def getWinner(session: f1.core.Session):
 
 def getDrivers(session: fastf1.core):
     return pd.unique(session.laps['Driver'])
+
+
+def loadSession() -> tuple:
+    try:
+        session = st.session_state['session']
+        return session
+    except:
+        st.error('Failed to load session data. Please reload at main page!')
+
+    return None
+

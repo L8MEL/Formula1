@@ -12,17 +12,13 @@ from pages.helper.telemetry_helper import *
 from pages.helper.sets import *
 from pages.helper.sets import *
 
-try:
-    session = st.session_state['session']
-    data_loaded = True
-except:
-    data_loaded = False
-    st.error("No data loaded. \n Please got to main")
+st.subheader("Results")
+session = loadSession()
 
-if data_loaded:
+if session is not None:
     sideBarLayout()
     session: fastf1.core.Session = st.session_state['session']
-    st.subheader("Results")
+
 
     # Driver and Data Selector
     st.subheader("Detailled Analysis")
@@ -38,7 +34,7 @@ if data_loaded:
 
     st.subheader("Diagram")
     df = getTelemtryDf(session, selected_drivers, selected_column, area)
-    st.dataframe(df)
+    #st.dataframe(df)
     try:
         if plot_type == "Matplotlib":
             plotTelemtryMatplotlib(df, selected_drivers)

@@ -1,19 +1,12 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-from pages.helper.helper import calcBoxStop
+from pages.helper.helper import *
 from pages.helper.sets import session_selection, sideBarLayout
 
-data_loaded = False
-try:
-    session = st.session_state['session']
-    data_loaded = True
+session = loadSession()
 
-except Exception as e:
-    print(e)
-    data_loaded = False
-
-if data_loaded:
+if session is not None:
     sideBarLayout()
     st.title('Boxenstopps')
     st.subheader('Driver Selection')
