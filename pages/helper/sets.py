@@ -32,7 +32,7 @@ def sideBarLayout():
             st.metric(label='Humidity', value=str(int(round(df.Humidity.mean(), 0))) + ' %')
             st.metric(label='Track Temp.', value=str(round(df.TrackTemp.mean(), 1)) + ' °C')
             st.metric(label='Max Windsp.', value=str(round(df.WindSpeed.max(), 1)) + ' km/h')
-        st.text("Cache Size: %s MB" % str(os.path.getsize('f1_cache')))
+        st.text("Cache Size: %s MB" % str(int(round(get_dir_size('f1_cache')/10**6))))
 
 
 def plotlySettings():
