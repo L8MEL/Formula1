@@ -2,7 +2,7 @@ import streamlit as st
 from pages.helper.lapAnalysisHelper import *
 from pages.helper.sets import sideBarLayout
 
-session = st.session_state['session']
+session = loadSession()
 
 sideBarLayout()
 

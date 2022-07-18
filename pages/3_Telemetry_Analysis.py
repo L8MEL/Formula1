@@ -17,7 +17,7 @@ session = loadSession()
 
 if session is not None:
     sideBarLayout()
-    session: fastf1.core.Session = st.session_state['session']
+    session: fastf1.core.Session = loadSession()
 
 
     # Driver and Data Selector
