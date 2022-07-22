@@ -5,10 +5,10 @@ from pages.helper.helper import *
 from pages.helper.sets import session_selection, sideBarLayout
 
 session = loadSession()
+sideBarLayout()
+st.title('Boxenstopps')
+if session is not None and st.session_state['event_type'] == 'Race':
 
-if session is not None:
-    sideBarLayout()
-    st.title('Boxenstopps')
     st.subheader('Driver Selection')
 
     selected_drivers = st.multiselect(label="Drivers", options=pd.unique(session.laps['Driver']))
@@ -33,6 +33,8 @@ if session is not None:
     fig = px.bar(df, x='Counter', y=selected_drivers, barmode='group')
 
     st.plotly_chart(fig)
+elif not st.session_state['event_type'] == 'Race':
+    st.warning('This analysis can only be displayed for the race!')
 else:
     st.subheader('Data not loaded')
 #st.dataframe(df)

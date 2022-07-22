@@ -2,8 +2,11 @@ import streamlit as st
 
 from pages.helper.sets import session_selection, sideBarLayout
 from pages.helper.helper import getSession
+from dataManager.RaceInformationManager import RaceInformationManager
+from PIL import Image
 
-st.set_page_config(page_title='F1 Timing', layout='wide')
+im = Image.open("icons/tire.png")
+st.set_page_config(page_title='F1 Timing', layout='wide', page_icon=im)
 
 if not 'track' in st.session_state:
     print('Setting defaul values')

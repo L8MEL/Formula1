@@ -36,5 +36,4 @@ f1.Cache.enable_cache('f1_cache')
 s = f1.get_session(year, track, event)
 s.load()
 
-weather = getWeather(s)
-print(123)
+print(s.get_driver('VER')['TeamColor'])

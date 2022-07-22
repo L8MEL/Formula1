@@ -25,22 +25,39 @@ if session is not None:
     selected_drivers = st.multiselect(label="Drivers", options=pd.unique(session.laps['Driver']),
                                       default=pd.unique(session.laps['Driver'])[0])
 
-    selected_column = st.selectbox(label="Data",
-                                   options=session.laps.pick_driver(selected_drivers[0]).get_car_data().columns)
+
+
 
     col1, col2 = st.columns(2)
     area = col1.radio(label="Select Area", options=['Fastest', 'All'])
-    plot_type = col2.radio(label="Select Plot", options=['Matplotlib', 'Plotly'])
+    plot_type = col2.radio(label="Select Plot", options=['Matplotlib', 'Plotly', 'Plotly_Graph'])
+    if plot_type == 'Plotly_Graph':
+        selected_column = st.multiselect(label="Data",
+                                       options=session.laps.pick_driver(selected_drivers[0]).get_car_data().columns,
+                                         default='Speed')
+    else:
+        selected_column = st.selectbox(label="Data",
+                                       options=session.laps.pick_driver(selected_drivers[0]).get_car_data().columns)
+        selected_column = [selected_column]
+
+
+
 
     st.subheader("Diagram")
-    df = getTelemtryDf(session, selected_drivers, selected_column, area)
+
+    df = getTelemtryDf(session, selected_drivers, selected_column[0], area)
     #st.dataframe(df)
     try:
         if plot_type == "Matplotlib":
             plotTelemtryMatplotlib(df, selected_drivers)
         elif plot_type == "Plotly":
             plotTelemetryPlotly(df, selected_drivers)
-    except:
+        else:
+            width, height, marker_size, plot_type = plotlySettings(False)
+            plotTelemetry_inOne(session, selected_drivers, selected_column, area
+                                , width, height, marker_size)
+    except Exception as e:
+        print(e)
         st.error('Plot could not be found!')
 
 else:
