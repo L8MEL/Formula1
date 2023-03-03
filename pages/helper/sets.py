@@ -7,7 +7,7 @@ from dataManager.RaceInformationManager import RaceInformationManager
 def session_selection():
     grandPrix = ['Melbourne', 'Singapore', 'Spielberg', 'Spa', 'Barcelona', 'Silverstone']
 
-    year_list = list(range(2022, 2000, -1))
+    year_list = list(range(2023, 2000, -1))
     session_list = ['Race', 'Qualifying', 'FP1', 'FP2', 'FP3']
     # Page Layout
     st.subheader("Select Event")
