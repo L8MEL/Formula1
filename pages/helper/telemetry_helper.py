@@ -19,7 +19,7 @@ index_dict = dict(Time=0, DriverNumber=1, LapTime=2, LapNumber=3, Stint=4, PitOu
 def getResults(session: fastf1.core.Session) -> pd.DataFrame:
     df = pd.DataFrame(session.results)
     df.to_numpy()
-    df.drop(labels=['TeamColor', 'Time'], axis=1,
+    df.drop(labels=['TeamColor'], axis=1,
             inplace=True)
     return df
 

@@ -54,8 +54,7 @@ def calcBoxStop(session: f1.core.Session):
     return all_stops
 
 def getWeather(session: f1.core.Session):
-    df: pd.DataFrame = pd.DataFrame(session.laps.pick_driver(getWinner(session)).get_weather_data())
-    return df
+    return session.laps.pick_driver(getWinner(session)).get_weather_data()
 
 def getWinner(session: f1.core.Session):
     df = session.results
